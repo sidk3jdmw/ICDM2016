@@ -15,6 +15,7 @@ Data
 
 ### Patients Data
 
+
 Algorithm
 --------
 
@@ -35,34 +36,34 @@ Arguments
 ----------
 
 ### General Arguments
-| Argument       | Usage                                        |
-| -------------- |:-------------------------------------------- |
+| Argument       | Meaning                                      |
+|:-------------- |:-------------------------------------------- |
 | alpha          | Attractiveness parameter of huff mobility    |
 | beta           | distance decay parameter of huff mobility    |
 | reachable_dist | The distance patients can abort (degree)     |
 | total_capacity | Total resources                              |
-| window_size    | T8*           |
+| window_size    |            |
 | tmp_num        | Number of temporary medical stations         |
 | tmp_max_list   | List of maximum capacity of medical stations |
 
 ### Greedy Arguments
-| Argument       | Usage             |
-| -------------- |:------------ |
-| density        |                      |
-| dist           |                       |
-| step           | The distance between two selectable neighbor position (degree) |
+| Argument       | Meaning                                                                |
+|:-------------- |:---------------------------------------------------------------------- |
+| density        | A selectable position should have at least **density** patients around |
+| dist           | define the max distance that represent "around" (degree)               |
+| step           | The distance between two selectable neighbor position (degree)         |
 
 ### Gene Arguments
-| Argument       | Usage                                  |
-| -------------- |:-------------------------------------- |
+| Argument       | Meaning                                |
+|:-------------- |:-------------------------------------- |
 | CXPB           | Crossover probability                  |
 | MUTPB          | Mutation probability                   |
 | NGEN           | Number of generation                   |
 | NPOP           | Number of chromosomes at the beginning |
 
 ### Density Arguments
-| Argument       | Usage                                                          |
-| -------------- |:-------------------------------------------------------------- |
+| Argument       | Meaning                                                        |
+|:-------------- |:-------------------------------------------------------------- |
 | step           | The distance between two selectable neighbor position (degree) |
 
 > For the region in dataset, one degree is about 100 km
