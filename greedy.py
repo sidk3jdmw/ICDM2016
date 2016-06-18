@@ -16,7 +16,7 @@ p = Pool(process)
 
 def search_best_place(pos_list, e):
     # best = 0
-    result = p.map(lambda x: e.eval_greedy_opt([x]), pos_list)
+    result = p.map(lambda x: e.eval([x]), pos_list)
     v = max(result)
     index = result.index(v)
     print(v, pos_list[index].x, pos_list[index].y, e.counter)

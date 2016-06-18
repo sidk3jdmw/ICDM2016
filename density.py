@@ -10,15 +10,6 @@ from position import PositionList, Position
 import time
 
 
-def search_best_place_2(pos_list, e):
-    # best = 0
-    result = map(e.eval_greedy_opt, pos_list)
-    v = max(result)
-    index = result.index(v)
-    print(v, pos_list[index].x, pos_list[index].y, e.counter)
-    return pos_list[index], v
-
-
 def get_init_pos_list(x_r, y_r, d):
     pos_list = PositionList()
     pos_list.xnum = len(np.arange(x_r[0], x_r[1], d))
@@ -109,7 +100,7 @@ def main():
 
 
         e = Evaluater(hospital_list, pat_list, total_capacity, window_size, tmp_max_list, huff, "DP")
-        r = e.eval_greedy_opt([t for t in tmp_list])
+        r = e.eval([t for t in tmp_list])
         p_list.append([(t.x, t.y) for t in tmp_list])
         del e
         result_list.append(r)

@@ -79,7 +79,7 @@ class Evaluater(object):
 
 
 
-    def eval_greedy_opt(self, pos):
+    def eval(self, pos):
         l_list = [a.max_capacity for a in self.a_list]
         t_list = self.t_list
         for i in range(len(pos)):

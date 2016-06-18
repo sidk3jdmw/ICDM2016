@@ -88,7 +88,7 @@ toolbox.register("individual", randGene, creator.Individual)
 
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-toolbox.register("evaluate", e.eval_greedy_opt)
+toolbox.register("evaluate", e.eval)
 
 toolbox.register("mate", tools.cxTwoPoint)
 
