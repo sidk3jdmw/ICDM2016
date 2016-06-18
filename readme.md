@@ -40,7 +40,7 @@ Arguments
 |:-------------- |:-------------------------------------------- |
 | alpha          | Attractiveness parameter of huff mobility    |
 | beta           | distance decay parameter of huff mobility    |
-| reachable_dist | The distance patients can abort (degree)     |
+| reachable_dist | The distance patients can abort (*1    )     |
 | total_capacity | Total resources                              |
 | window_size    |            |
 | tmp_num        | Number of temporary medical stations         |
@@ -50,8 +50,8 @@ Arguments
 | Argument       | Meaning                                                                |
 |:-------------- |:---------------------------------------------------------------------- |
 | density        | A selectable position should have at least **density** patients around |
-| dist           | define the max distance that represent "around" (degree)               |
-| step           | The distance between two selectable neighbor position (degree)         |
+| dist           | define the max distance that represent "around" (*1)                   |
+| step           | The distance between two selectable neighbor position (*1)             |
 
 ### Gene Arguments
 | Argument       | Meaning                                |
@@ -64,7 +64,7 @@ Arguments
 ### Density Arguments
 | Argument       | Meaning                                                        |
 |:-------------- |:-------------------------------------------------------------- |
-| step           | The distance between two selectable neighbor position (degree) |
+| step           | The distance between two selectable neighbor position (*1)     |
 
-> For the region in dataset, one degree is about 100 km
+> (*1)  We use degree (lat & lon) to represent distance here, because one degree is about 100 km in the region in dataset.
 
