@@ -11,7 +11,6 @@ class PositionList(list):
 
 
 
-        # for h in h_list:
 
 class Position(object):
     def __init__(self, x, y):

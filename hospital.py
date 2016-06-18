@@ -18,9 +18,6 @@ class Hospital(object):
         self.x = x
         self.y = y
         self.max_capacity = max_capacity
-        # self.min_capacity = min_capacity
         self.dist_list = []
 
-    # def __hash__(self):
-        # return hash(self.name)
 

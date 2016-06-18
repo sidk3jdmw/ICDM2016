@@ -39,14 +39,6 @@ def density_sorter(pos_list, patients):
         pat_x, pat_y = pat.x - xmin, pat.y - ymin
         pat_block = int(pat_x / gap) + int(pat_y / gap) * xnum
         density_block[pat_block] += 1
-        # for y in range(-dist_b, dist_b + 1):
-            # x_r = dist_b - abs(y)
-            # for x in range(-x_r, x_r + 1):
-                # try:
-                    # density_block[pat_block + x + y * xnum] += 1
-                    # counter += 1
-                # except IndexError:
-                    # pass
     for i in range(len(density_block)):
         pos_list[i].density = density_block[i]
     pos_list.sort(key = lambda x: x.density, reverse=True)
@@ -87,12 +79,8 @@ def main():
     # huff = Huff(1, 1, ignore_prob)
     # t_num = 2
 
-    # ignore, opt, sub, cache
-    # build hospital list
     hospital_list = HospitalList()
     hospital_list.read_file("hospital_high_capacity.tsv")
-    # hospital_list.append(Hospital("Tmp-" + str(123), 120.17023, 22.95585, tmp_max))
-    # build patient list
     pat_list = PatientList()
     pat_list.read_file("sorted.tsv")
 

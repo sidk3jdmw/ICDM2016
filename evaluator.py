@@ -10,10 +10,6 @@ from stack import XStackGroup, PerfectStackGroup
 from patient import PatientList, week_filter
 from position import PositionList, Position
 
-# class YoungPatient(Patient):
-    # def __init__(self, x, y, date, weight):
-        # super().__init__(x, y, date, weight)
-    # pass
 
 class Evaluater(object):
     def __init__(self, h_list, p_list, t_cap, w_size, t_max_list, huff, allocate_method):
@@ -45,8 +41,7 @@ class Evaluater(object):
                 # self.date_arange_list.append()
         r_list.append((pointer, len(self.p_list) - 1))
         return r_list
-    # def eval(ind):
-        # pass
+
     def calc_date_rearrange_list(self):
         q = 2
         f_date = self.p_list.fdate
@@ -68,17 +63,6 @@ class Evaluater(object):
         r_list.append((pointer, i - 1))
         return r_list
 
-    def eval_greedy_ii(self, pos):
-
-        if pos.val is not None and self.base + pos.val < self.best:
-            self.counter += 1
-            return 0
-        result = self.eval_greedy_opt(pos)
-
-        if result > self.best:
-            self.best = result
-        return result
-
     def calc_huff_opt(self, pat):
         huff = self.huff
         t_list = self.t_list
@@ -88,10 +72,6 @@ class Evaluater(object):
             ad_list[i] = huff.calc_single_ad(pat, t_list[0])
 
         prob_dict = huff.calc_huff_quick(pat, t_list, ad_list)
-            # prob_dict[t_list[0]] = prob
-        # else:
-            # prob_dict = {h:v[1] for h, v in pat.relation.items()}
-        # print(sum(v for h, v in prob_dict.items()))
         return prob_dict
 
     def calc_huff(self, pat):
@@ -104,46 +84,16 @@ class Evaluater(object):
         t_list = self.t_list
         for i in range(len(pos)):
             t_list[i].x, t_list[i].y = pos[i].x, pos[i].y
-        # for i in range(len(pos)):
-            # t_list[i].x, t_list[i].y = pos[i]
-        # t_list[0].x, t_list[0].y = pos.x, pos.y
 
         prob_dict_list = self.get_prob()
         stack_group = PerfectStackGroup(n=len(self.a_list), top=l_list, allocate_method=self.allocate_method)
         for i in range(100):
             come_record = self.emulating(prob_dict_list)
             in_record = self.get_in_record(come_record)
-            # r, _ = self.get_result_and_peak(in_record, l_list)
             stack_group.add_scenario(come_record, in_record)
-            # result += r
         stack_group.normalize_scenario()
-        # sum_resource = sum(l_list)
         result = stack_group.solve(self.t_cap, False)
         return result,
-        # if sum_resource - self.t_cap > self.t_cap:
-            # r = stack_group.solve(self.t_cap, up_to_down=False)
-            # result = stack_group.sum() - r
-        # else:
-            # r = stack_group.solve(sum_resource - t_cap, up_to_down=True)
-            # result = r
-        # come_record = self.emulating_greedy_opt(pos)
-        # in_record = self.get_in_record(come_record)
-        # sum_peak = sum(peak_list)
-        # if sum_peak <= self.t_cap:
-            # return result / self.w_size,
-        # stacks = self.build_stacks(come_record)
-        # minus_val = self.solve_ordered_stacks(stacks, sum_peak - self.t_cap)
-        # new_result = (result - minus_val)
-        # # print(result, new_result)
-        # # print(result, new_result)
-        # return new_result / self.w_size,
-        # a_list = self.a_list
-        # limit_list = [a.max_capacity for a in a_list]
-        # t_cap = self.t_cap
-        # result = 0
-        # count = 0
-        # sum_list = [0] * len(a_list)
-        # peak = [0] * len(a_list)
 
     def get_in_record(self, come_record):
         in_record = [[0] * (len(come_record[i]) + self.w_size - 1) for i in range(len(come_record))]
@@ -190,31 +140,9 @@ class Evaluater(object):
                 if sum_list[i] > peak[i]:
                     peak[i] = sum_list[i]
 
-        # i += 1
-        # count = 0
-        # for d in range(d_r[0], d_r[1] + 1):
-            # last_d = d - self.w_size
-            # if last_d >= 0:
-                # sum_list[i] -= record[i][last_d]
-            # sum_list[i] += record[i][d]
-            # if sum_list[i] > l_list[i]:
-                # r = l_list[i] - sum_list[i] + record[i][d]
-                # record[i][d] = r
-                # sum_list[i] = l_list[i]
-            # else:
-                # r = record[i][d]
-            # result += r
-            # count += r
-            # if sum_list[i] > peak[i]:
-                # peak[i] = sum_list[i]
         return result, peak
 
     def get_prob(self):
-        # pos[0] = (120.18523, 22.97085)
-        # pos[1] = (120.18523, 23.02085)
-        # pos[2] = (120.17023, 22.98585)
-        # pos[3] = (120.19523, 23.03585)
-        # pos[4] = (120.18523, 22.96585)
 
         p_list = self.p_list
 
@@ -240,23 +168,7 @@ class Evaluater(object):
         return record
 
 def main():
-    from patient import PatientList, week_filter
-    from hospital import HospitalList
-    tmp_pos_list = [
-
-    ]
-    hospital_list = HospitalList()
-    hospital_list.read_file("hospital.tsv")
-    huff = Huff(1, 1, ignore_prob)
-
-    pat_list = PatientList()
-    pat_list.read_file("sorted.tsv")
-    pat_list.build_relations(hospital_list, huff)
-
-    pat_list = week_filter(pat_list, 36, 37)
-    pat_list.update_info()
-    e = Evaluater(hospital_list, pat_list, 0.02, 1000, 3, [30] * len(tmp_pos_list), huff, 0)
-    v = e.eval_greedy_opt(tmp_pos_list)
+    pass
 
 if __name__ == "__main__":
     main()

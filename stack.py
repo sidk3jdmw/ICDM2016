@@ -32,10 +32,6 @@ class StackGroup():
         return grouped_items
 
     def dp_solve(self, pop_times, up_to_down):
-        # if up_to_down:
-            # pass
-        # else:
-            # pass
         f = [0] * (pop_times + 1)
         grouped_items = self.stack_to_item_dp()
         # print([len(g) for g in grouped_items)
@@ -48,10 +44,9 @@ class StackGroup():
 
     def stack_to_item_greedy(self):
         stacks = self.stacks
-        # item (v/w, weight, value, group)
-        # grouped_items = [[(0., 0., 0., 0)] * (self.top[i] + 1) for i in range(self.n)]
         all_items = []
         for i in range(self.n):
+            # item (v/w, weight, value, group)
             g = [(0, 0, 0, 0)] * (self.top[i] + 1)
             for j in range(1, self.top[i] + 1):
                 value = stacks[i][j - 1] + g[j - 1][1]
@@ -75,18 +70,6 @@ class StackGroup():
             except:
                 pass
 
-
-        # result = 0
-        # selected = [False] * self.n
-        # all_items = self.stack_to_item_greedy()
-        # all_items.sort(reverse=True)
-        # for item in all_items:
-            # cp, weight, value, group = item
-            # if not selected[group] and pop_times >= weight:
-                # pop_times -= weight
-                # selected[group] = True
-                # result += value
-        # print(pop_times)
         return -result
 
 class XStackGroup(StackGroup):
@@ -111,10 +94,6 @@ class XStackGroup(StackGroup):
                 for k in range(last_index, temp_list[j][0]):
                     stacks[i][k] += cum_val
                 last_index = temp_list[j][0]
-            # print(sum(stacks[0]))
-            # print(temp_list)
-            # print(stacks[0])
-            # exit()
         pass
 
 

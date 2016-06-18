@@ -85,12 +85,6 @@ def main():
     pat_list = PatientList()
     pat_list.read_file("sorted.tsv")
 
-    # test_pat_list = week_filter(pat_list, 34, 35)
-    # test_pat_list.update_info()
-    # pat_list = week_filter(pat_list, 32, 33)
-    # pat_list.update_info()
-    # week_filter()
-
     pos_list = get_init_pos_list((pat_list.xmin, pat_list.xmax), (pat_list.ymin, pat_list.ymax), step)
     pos_list.set_range(pat_list.xmin, pat_list.xmax, pat_list.ymin, pat_list.ymax)
     pos_list = density_filter(pos_list, pat_list, density, dist)
@@ -108,10 +102,5 @@ def main():
         del e
     print("Time: ", time.time() - start_time)
     print(v, result_pos)
-    # for i in range(-1, -8, -2):
-        # e = Evaluater(hospital_list[:i], test_pat_list, 0.02,total_capacity, window_size, tmp_max_list, huff, v)
-        # v = e.eval_greedy_opt(result_pos[i])
-        # print(v)
-        # del e
 if __name__ == "__main__":
     main()

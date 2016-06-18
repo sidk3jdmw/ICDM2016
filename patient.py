@@ -33,7 +33,6 @@ class PatientList(list):
     def build_relations(self, h_list, huff):
         for pat in self:
             pat.build_relation(h_list, huff)
-        # self.relation = {}
         pass
 
     def append_relations(self, h_list, huff):
@@ -53,7 +52,6 @@ class Patient(object):
         self.ad_sum = 0
         huff.set_ad(self, h_list)
         huff.set_prob_quick(self)
-        # self.relation = {}
         pass
 
     def append_relation(self, h_list, huff):
@@ -76,9 +74,6 @@ def main():
     for i in range(2, 50, 2):
         new_pat_list = week_filter(pat_list, i, i + 1);
         print(i, len(new_pat_list))
-    # print(len(new_pat_list))
-    # new_pat_list = week_filter(pat_list, 15, 16);
-    # print(len(new_pat_list))
 
 if __name__ == "__main__":
     main()
