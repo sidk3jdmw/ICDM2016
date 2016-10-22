@@ -1,14 +1,6 @@
-# import pandas as pd
-# import matplotlib.pyplot as plt
-import datetime as dt
 from hospital import Hospital
-from copy import deepcopy
 import random
-import heapq
-from collections import Counter
-from stack import XStackGroup, PerfectStackGroup
-from patient import PatientList, week_filter
-from position import PositionList, Position
+from stack import PerfectStackGroup
 
 
 class Evaluater(object):
@@ -22,64 +14,15 @@ class Evaluater(object):
         self.t_list = [Hospital("Tmp-" + str(i), -1, -1, t_max_list[i]) for i in range(len(t_max_list))]
         self.a_list = self.h_list + self.t_list
         self.a_mapping = {a:i for i, a in enumerate(self.a_list)}
-        self.rearrange_list = self.calc_rearrange_list()
-        self.date_rearrange_list = self.calc_date_rearrange_list()
         self.counter = 0
         pass
-    def calc_rearrange_list(self):
-        q = 2
-        f_week = self.p_list.fdate.isocalendar()[1]
-        self.date_arange_list = []
-        cur_week = f_week
-        pointer = 0
-        r_list = []
-        for i, p in enumerate(self.p_list):
-            if p.date.isocalendar()[1] - cur_week >= q:
-                r_list.append((pointer, i - 1))
-                pointer = i
-                cur_week = p.date.isocalendar()[1]
-                # self.date_arange_list.append()
-        r_list.append((pointer, len(self.p_list) - 1))
-        return r_list
-
-    def calc_date_rearrange_list(self):
-        q = 2
-        f_date = self.p_list.fdate
-        l_date = self.p_list.ldate
-        pre_week = f_date.isocalendar()[1]
-        pointer = 0
-        i = 0
-        r_list = []
-        return [(0, (l_date - f_date).days)]
-        while 1:
-            if f_date > l_date:
-                break
-            if f_date.isocalendar()[1] - pre_week >= q:
-                r_list.append((pointer, i - 1))
-                pre_week = f_date.isocalendar()[1]
-                pointer = i
-            f_date += dt.timedelta(1)
-            i += 1
-        r_list.append((pointer, i - 1))
-        return r_list
-
-    def calc_huff_opt(self, pat):
-        huff = self.huff
-        t_list = self.t_list
-        t_num = len(t_list)
-        ad_list = [0] * t_num
-        for i in range(t_num):
-            ad_list[i] = huff.calc_single_ad(pat, t_list[0])
-
-        prob_dict = huff.calc_huff_quick(pat, t_list, ad_list)
-        return prob_dict
 
     def calc_huff(self, pat):
         return self.huff.calc_huff(pat, self.a_list)
 
 
 
-    def eval(self, pos):
+    def eval_greedy_opt(self, pos):
         l_list = [a.max_capacity for a in self.a_list]
         t_list = self.t_list
         for i in range(len(pos)):
@@ -102,45 +45,6 @@ class Evaluater(object):
                 for w in range(self.w_size):
                     in_record[i][d + w] += c
         return in_record
-
-    def get_result_and_peak(self, in_record, l_list):
-        peak = [0] * len(l_list)
-        result = 0
-        for i, in_r in enumerate(in_record):
-            for pat_num in in_r:
-                v = 0
-                if pat_num <= l_list[i]:
-                    v = pat_num
-                else:
-                    v = l_list[i]
-                result += v
-                if v > peak[i]:
-                    peak[i] = v
-        return result, peak
-
-    def get_result_and_peak_wrong(self, record, l_list):
-        result = 0
-        peak = [0] * len(l_list)
-        sum_list = [0] * len(l_list)
-
-        for i, a in enumerate(self.h_list):
-            for d in range(0, self.date_rearrange_list[0][1] + 1):
-                last_d = d - self.w_size
-                if last_d >= 0:
-                    sum_list[i] -= record[i][last_d]
-                sum_list[i] += record[i][d]
-                if sum_list[i] > l_list[i]:
-                    # XXX WTF?
-                    r = l_list[i] - sum_list[i] + record[i][d]
-                    record[i][d] = r
-                    sum_list[i] = l_list[i]
-                else:
-                    r = record[i][d]
-                result += r
-                if sum_list[i] > peak[i]:
-                    peak[i] = sum_list[i]
-
-        return result, peak
 
     def get_prob(self):
 

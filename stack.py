@@ -1,5 +1,7 @@
 from collections import Counter
 import heapq
+
+
 class StackGroup():
     def __init__(self, n, top, allocate_method):
         self.n = n
@@ -7,13 +9,13 @@ class StackGroup():
         self.stacks = [[0.] * top[i] for i in range(n)]
         self.scenario_num = 0
         self.solve = self.select_method(allocate_method)
-        pass
 
     def select_method(self, allocate_method):
         if allocate_method == "Greedy":
             return self.greedy_solve
         elif allocate_method == "DP":
             return self.dp_solve
+
     def normalize_scenario(self):
         stacks = self.stacks
         scenario_num = self.scenario_num
@@ -24,7 +26,6 @@ class StackGroup():
 
     def stack_to_item_dp(self):
         stacks = self.stacks
-        # item (weight, value)
         grouped_items = [[(0, 0)] * (self.top[i] + 1) for i in range(self.n)]
         for i in range(self.n):
             for j in range(1, self.top[i] + 1):
@@ -34,9 +35,8 @@ class StackGroup():
     def dp_solve(self, pop_times, up_to_down):
         f = [0] * (pop_times + 1)
         grouped_items = self.stack_to_item_dp()
-        # print([len(g) for g in grouped_items)
         for g_i in grouped_items:
-            for space in range(pop_times, 0, -1):
+            for space in range(pop_times, -1, -1):
                 for w, v in g_i:
                     if space - w >= 0:
                         f[space] = max(f[space], f[space - w] + v)
@@ -46,7 +46,6 @@ class StackGroup():
         stacks = self.stacks
         all_items = []
         for i in range(self.n):
-            # item (v/w, weight, value, group)
             g = [(0, 0, 0, 0)] * (self.top[i] + 1)
             for j in range(1, self.top[i] + 1):
                 value = stacks[i][j - 1] + g[j - 1][1]
@@ -60,6 +59,8 @@ class StackGroup():
         for s in stacks:
             s.reverse()
         heap = [(-s[-1], i) for i, s in enumerate(stacks)]
+        for s in stacks:
+            s.pop()
         heapq.heapify(heap)
         for i in range(pop_times):
             v, index = heapq.heappop(heap)
@@ -69,7 +70,6 @@ class StackGroup():
                 heapq.heappush(heap, (-new_v, index))
             except:
                 pass
-
         return -result
 
 class XStackGroup(StackGroup):
@@ -82,7 +82,6 @@ class XStackGroup(StackGroup):
             in_record[i] = list(map(lambda x: x if x <= max_cap else max_cap, in_record[i]))
             temp_list = list(Counter(in_record[i]).items())
             temp_list.sort()
-            # remove 0 amounts
             temp_list[0] = (0, 0)
             if temp_list[-1][0] != max_cap:
                 temp_list.append((max_cap, 0))
@@ -94,7 +93,6 @@ class XStackGroup(StackGroup):
                 for k in range(last_index, temp_list[j][0]):
                     stacks[i][k] += cum_val
                 last_index = temp_list[j][0]
-        pass
 
 
 class PerfectStackGroup(StackGroup):

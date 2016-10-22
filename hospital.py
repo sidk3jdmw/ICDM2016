@@ -6,7 +6,7 @@ class HospitalList(list):
 
     def read_file(self, filename):
         f = open(filename, "r")
-        # escape first line
+        # ignore first line
         f.readline()
         for row in csv.reader(f, delimiter="\t"):
             h = Hospital(row[0], float(row[1]), float(row[2]), int(row[3]))
@@ -19,5 +19,4 @@ class Hospital(object):
         self.y = y
         self.max_capacity = max_capacity
         self.dist_list = []
-
 

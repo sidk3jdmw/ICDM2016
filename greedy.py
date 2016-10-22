@@ -5,21 +5,21 @@ import sys
 import numpy as np
 from helper import Huff, distance
 from hospital import HospitalList, Hospital
-from patient import PatientList, Patient, week_filter
+from patient import PatientList
 from position import PositionList, Position
 import time
 
-
+# Num of Process
 process = 4
+
 p = Pool(process)
 
 
 def search_best_place(pos_list, e):
-    # best = 0
-    result = p.map(lambda x: e.eval([x]), pos_list)
+    result = p.map(lambda x: e.eval_greedy_opt([x]), pos_list)
     v = max(result)
     index = result.index(v)
-    print(v, pos_list[index].x, pos_list[index].y, e.counter)
+    # print(v, pos_list[index].x, pos_list[index].y, e.counter)
     return pos_list[index], v
 
 def get_init_pos_list(x_r, y_r, d):
@@ -58,14 +58,16 @@ def density_filter(pos_list, patients, density, dist):
 
 def main():
     # algorithm arguments init
-    density = 1000
+    density = 3000
     dist = 0.02
     step = 0.005
+
     # evaluator arguments init
     total_capacity = 3000
     window_size = 3
-    tmp_num = 8
+    tmp_num = 2
     tmp_max_list = [90] * tmp_num
+    method = "DP"
 
     # huff arguments init
     alpha = 1
@@ -74,33 +76,44 @@ def main():
     reachable_dist = 0.02
     huff = Huff(alpha, beta, reachable_dist, ignore_prob)
 
+    # file name
+    patient_filename = sys.argv[1]
+    hospital_filename = sys.argv[2]
+
     # record variables
     result_pos = []
     start_time = time.time()
 
 
     hospital_list = HospitalList()
-    hospital_list.read_file("hospital_high_capacity.tsv")
+    hospital_list.read_file(hospital_filename)
 
     pat_list = PatientList()
-    pat_list.read_file("sorted.tsv")
+    pat_list.read_file(patient_filename)
+
 
     pos_list = get_init_pos_list((pat_list.xmin, pat_list.xmax), (pat_list.ymin, pat_list.ymax), step)
     pos_list.set_range(pat_list.xmin, pat_list.xmax, pat_list.ymin, pat_list.ymax)
     pos_list = density_filter(pos_list, pat_list, density, dist)
 
-    print("Num of Position: ", len(pos_list))
+    print("Num of Selectable Position: ", len(pos_list))
 
     for i in range(tmp_num):
         tmp_max = tmp_max_list[i]
-        e = Evaluater(hospital_list, pat_list, total_capacity, window_size, [tmp_max], huff, "DP")
+        e = Evaluater(hospital_list, pat_list, total_capacity, window_size, [tmp_max], huff, method)
         pos, v = search_best_place(pos_list, e)
         pos_list.sort(key=lambda p: p.val, reverse=True)
         result_pos.append(pos)
         new_h = Hospital("Tmp-" + str(i), pos.x, pos.y, tmp_max)
         hospital_list.append(new_h)
         del e
-    print("Time: ", time.time() - start_time)
-    print(v, result_pos)
+
+    print "\nResult:"
+    print v[0]
+    print "\nPosition:"
+    for i in range(len(result_pos)):
+        print "%f, %f" % (result_pos[i].x, result_pos[i].y)
+    # print(v, result_pos)
+
 if __name__ == "__main__":
     main()

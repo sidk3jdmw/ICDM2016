@@ -1,70 +1,95 @@
-ICDM2016
-===============
+# ICDM DM1047
+This code is used in the simulation of the paper entitled "Relief of Spatiotemporal Accessibility Overloading with Optimal Resource Placement", ICDM 2016
 
-Requirements
---------
+## Algorithms
+- Greedy
+- Gene
+- Density
 
-- PyPy 4.0.1 (for python 2)
-- DEAP (Python Package)
+## Requirements
 
-Data
---------
+### Language and Interpreter
+- PyPy 4.0.1 for Python 2
 
-### Hospitals Data
+### PyPy Packages
+- DEAP
+- Numpy
 
+## Execution
 
-### Patients Data
+### Greedy
+```
+pypy greedy.py patient.tsv hospital.tsv
+```
 
+### Gene
+```
+pypy gene.py patient.tsv hospital.tsv
+```
 
-Algorithm
---------
+### Density
+```
+pypy density.py patient.tsv hospital.tsv
+```
 
-- Gene Method - gene.py
-- Greedy Method - greedy.py
-- Density Based Method - density.py
+## File Format
+### Hospital
+File type is \*.tsv. The first line is considered as labels and will be ignored.
+|   | Hospital Name | Longitude | Latitude | Capacity |
+|---|:----------:|:-------------:|:-----:| :-----:|
+|Type|String|Float|Float|Integer|
 
+ex:
+```
+Name       \t Longitude \t Latitude \t Capacity
+Hospital_1 \t 120.21898 \t 23.00218 \t 500
+Hospital_2 \t 120.18384 \t 23.18191 \t 500
+```
+### Patients
+File type is \*.tsv. The first line is considered as labels and will be ignored.
+|   | Longitude | Latitude | Date | 
+|---|:----------:|:-------------:|:-----:|
+|Type|Float|Float|String (yyyy/mm/dd)|
 
-How to use
---------
+ex:
+```
+Longitude \t Latitude \t Date
+120.21898 \t 23.00218 \t 2015/5/5
+120.18384 \t 23.18191 \t 2015/12/3
+```
+## Some variables mean
 
-1. Install PyPy 4.0.1 for Python 2 (Cannot use CPython due to the different behavior of multiprocessing)
-2. Install Deap package for PyPy
-3. Choose a algorithm and set arguments in the corresponding file.
-4. run "pypy greedy.py" (or other algorithm files)
-
-Arguments
-----------
-
-### General Arguments
-| Argument       | Meaning                                      |
+### General Variables
+| Variables       | Meaning                     |
 |:-------------- |:-------------------------------------------- |
+|process         | Num of Processes |
 | alpha          | Attractiveness parameter of huff mobility    |
-| beta           | distance decay parameter of huff mobility    |
-| reachable_dist | The distance patients can abort (*1    )     |
+| beta           | Distance decay parameter of huff mobility    |
+| reachable_dist | Max distance patients are willing to move to medical station.  (\*1)     |
 | total_capacity | Total resources                              |
-| window_size    |            |
+| window_size    | number of days that patients will stay in hospital         |
 | tmp_num        | Number of temporary medical stations         |
-| tmp_max_list   | List of maximum capacity of medical stations |
+| tmp_max_list   | List of capacity limit of medical stations |
+| method         | Method to solve resource allocation problem (Greedy or DP)|
 
-### Greedy Arguments
-| Argument       | Meaning                                                                |
+### Greedy Variables
+| Variables       | Meaning                     |
 |:-------------- |:---------------------------------------------------------------------- |
 | density        | A selectable position should have at least **density** patients around |
-| dist           | define the max distance that represent "around" (*1)                   |
-| step           | The distance between two selectable neighbor position (*1)             |
+| dist           | define the max distance that represent "around" (\*1)                   |
+| step           | The distance between two selectable neighbor position (\*1)             |
 
-### Gene Arguments
-| Argument       | Meaning                                |
+### Gene Variables
+| Variables       | Meaning                 |
 |:-------------- |:-------------------------------------- |
 | CXPB           | Crossover probability                  |
 | MUTPB          | Mutation probability                   |
 | NGEN           | Number of generation                   |
 | NPOP           | Number of chromosomes at the beginning |
 
-### Density Arguments
-| Argument       | Meaning                                                        |
+### Density Variables
+| Variables       | Meaning                          |
 |:-------------- |:-------------------------------------------------------------- |
-| step           | The distance between two selectable neighbor position (*1)     |
+| step           | The distance between two selectable neighbor position (\*1)     |
 
-> (*1)  We use degree (lat & lon) to represent distance here, because one degree is about 100 km in the region in dataset.
-
+\*1 We use degree to calculate distance because 0.01 degree is about 1km in the region of dataset.

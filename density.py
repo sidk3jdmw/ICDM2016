@@ -1,11 +1,10 @@
 # import pandas as pd
 from evaluator import Evaluater
-from multiprocessing import Pool
 import sys
 import numpy as np
 from helper import Huff, distance
 from hospital import HospitalList, Hospital
-from patient import PatientList, Patient, week_filter
+from patient import PatientList
 from position import PositionList, Position
 import time
 
@@ -25,7 +24,6 @@ def density_sorter(pos_list, patients):
     gap = distance(pos_list[0], pos_list[1])
     xnum = pos_list.xnum
     xmin, ymin = pos_list.xmin, pos_list.ymin
-    counter = 0
     for pat in patients:
         pat_x, pat_y = pat.x - xmin, pat.y - ymin
         pat_block = int(pat_x / gap) + int(pat_y / gap) * xnum
@@ -51,8 +49,9 @@ def main():
     # evaluator arguments init
     total_capacity = 3000
     window_size = 3
-    tmp_num = 8
+    tmp_num = 2
     tmp_max_list = [90] * tmp_num
+    method = "DP"
 
     # huff arguments init
     alpha = 1
@@ -61,25 +60,19 @@ def main():
     reachable_dist = 0.02
     huff = Huff(alpha, beta, reachable_dist, ignore_prob)
 
-    start_time = time.time()
-    # argument init
-    # density = 1000
-    # dist = 0.02
-    # ignore_prob = 0.01
-    # tmp_max = 90
-    # huff = Huff(1, 1, ignore_prob)
-    # t_num = 2
+    # file name
+    patient_filename = sys.argv[1]
+    hospital_filename = sys.argv[2]
 
+
+    # build hospital list
     hospital_list = HospitalList()
-    hospital_list.read_file("hospital_high_capacity.tsv")
+    hospital_list.read_file(hospital_filename)
+
     pat_list = PatientList()
-    pat_list.read_file("sorted.tsv")
+    pat_list.read_file(patient_filename)
 
 
-    # test_pat_list = week_filter(pat_list, 38, 39)
-    # test_pat_list.update_info()
-    # pat_list = week_filter(pat_list, 36, 37)
-    # pat_list.update_info()
 
     pos_list = get_init_pos_list((pat_list.xmin, pat_list.xmax), (pat_list.ymin, pat_list.ymax), step)
 
@@ -99,15 +92,19 @@ def main():
                 break
 
 
-        e = Evaluater(hospital_list, pat_list, total_capacity, window_size, tmp_max_list, huff, "DP")
-        r = e.eval([t for t in tmp_list])
+        e = Evaluater(hospital_list, pat_list, total_capacity, window_size, tmp_max_list, huff, method)
+        r = e.eval_greedy_opt([t for t in tmp_list])
         p_list.append([(t.x, t.y) for t in tmp_list])
         del e
         result_list.append(r)
     value = max(result_list)
     index = result_list.index(value)
 
-    print("Time: ", time.time() - start_time)
-    print(value, p_list[index])
+    print "\nResult:"
+    print value[0]
+    print "\nPosition:"
+    for i in range(len(p_list[index])):
+        print "%f, %f" % p_list[index][i]
+
 if __name__ == "__main__":
     main()

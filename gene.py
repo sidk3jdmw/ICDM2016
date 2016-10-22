@@ -7,29 +7,26 @@ from deap import tools
 from evaluator import Evaluater
 from multiprocessing import Pool
 from hospital import HospitalList
-from patient import PatientList, week_filter
+from patient import PatientList
 from helper import Huff
 from position import PositionList, Position
 import numpy as np
 import time
 
+# Num of Process
 process = 4
-
-creator.create("FitnessMax", base.Fitness, weights=(1.0,))
-creator.create("Individual", list, fitness=creator.FitnessMax)
-
-toolbox = base.Toolbox()
 
 
 # algorithm arguments init
-CXPB, MUTPB, NGEN, NPOP = 0.5, 0.4, 1, 10
+CXPB, MUTPB, NGEN, NPOP = 0.5, 0.4, 100, 100
 TERMINATE = 10
 
 # evaluator arguments init
 total_capacity = 3000
 window_size = 3
-tmp_num = 8
+tmp_num = 2
 tmp_max_list = [90] * tmp_num
+method = "DP"
 
 # huff arguments init
 alpha = 1
@@ -38,6 +35,14 @@ ignore_prob = 0.01
 reachable_dist = 0.02
 huff = Huff(alpha, beta, reachable_dist, ignore_prob)
 
+# file name
+patient_filename = sys.argv[1]
+hospital_filename = sys.argv[2]
+
+creator.create("FitnessMax", base.Fitness, weights=(1.0,))
+creator.create("Individual", list, fitness=creator.FitnessMax)
+
+toolbox = base.Toolbox()
 
 def get_init_pos_list(x_r, y_r, d):
     pos_list = PositionList()
@@ -51,15 +56,14 @@ def get_init_pos_list(x_r, y_r, d):
 
 # init
 hospital_list = HospitalList()
-hospital_list.read_file("hospital_high_capacity.tsv")
+hospital_list.read_file(hospital_filename)
 
 pat_list = PatientList()
-pat_list.read_file("sorted.tsv")
-pat_list.build_relations(hospital_list, huff)
+pat_list.read_file(patient_filename)
 
 
 pos_list = get_init_pos_list((pat_list.xmin, pat_list.xmax), (pat_list.ymin, pat_list.ymax), 0.005)
-e = Evaluater(hospital_list, pat_list, total_capacity, window_size, tmp_max_list, huff, "DP")
+e = Evaluater(hospital_list, pat_list, total_capacity, window_size, tmp_max_list, huff, method)
 
 
 def randPosition(pos_list=pos_list):
@@ -88,7 +92,7 @@ toolbox.register("individual", randGene, creator.Individual)
 
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-toolbox.register("evaluate", e.eval)
+toolbox.register("evaluate", e.eval_greedy_opt)
 
 toolbox.register("mate", tools.cxTwoPoint)
 
@@ -148,18 +152,16 @@ def main():
 
         max_fits = max(fits)
         print(g, max_fits)
-        if max_fits <= pre_best:
-            terminal_count += 1
-        else:
-            pre_best = max_fits
-            terminate_count = 0
-        if terminate_count > TERMINATE:
-            break
-        # print("  Max %s" % max(fits))
 
     best_ind = tools.selBest(pop, 1)[0]
-    print("Time: ", time.time() - start_time)
-    print(best_ind.fitness.values, [(pos.x, pos.y) for pos in best_ind])
+
+    print "\nResult:"
+    print best_ind.fitness.values[0]
+    print "\nPosition:"
+    for pos in best_ind:
+        print "%f, %f" % (pos.x, pos.y)
+
+    # print(best_ind.fitness.values, [(pos.x, pos.y) for pos in best_ind])
 
 if __name__ == "__main__":
     main()
