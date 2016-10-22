@@ -35,6 +35,7 @@ pypy density.py patient.tsv hospital.tsv
 ## File Format
 ### Hospital
 File type is \*.tsv. The first line is considered as labels and will be ignored.
+
 |   | Hospital Name | Longitude | Latitude | Capacity |
 |---|:----------:|:-------------:|:-----:| :-----:|
 |Type|String|Float|Float|Integer|
@@ -47,7 +48,8 @@ Hospital_2 \t 120.18384 \t 23.18191 \t 500
 ```
 ### Patients
 File type is \*.tsv. The first line is considered as labels and will be ignored.
-|   | Longitude | Latitude | Date | 
+
+|   | Longitude | Latitude | Date |
 |---|:----------:|:-------------:|:-----:|
 |Type|Float|Float|String (yyyy/mm/dd)|
 
